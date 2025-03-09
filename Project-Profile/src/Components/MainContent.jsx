@@ -1,9 +1,10 @@
 import { Cards } from "./Cards";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import "../App.css";
 
 export function MainContent() {
-  const [imgProfile, setImgProfile] = useState([]);
+  const [imgProfile, setImgProfile] = useState();
+  console.log("Initial imgProfile:", imgProfile);
   const [values, setValues] = useState({
     fullname: "",
     email: "",
@@ -13,7 +14,6 @@ export function MainContent() {
 
   const [store, setStore] = useState([]);
   const [storeImg, setStoreImg] = useState([]);
-  const fileInputRef = useRef(null); // Create a ref for the file input
 
   const handleChange = (e) => {
     setValues({
@@ -23,6 +23,8 @@ export function MainContent() {
   };
 
   const handleImageChange = (e) => {
+    console.log("drwerewr mee!!", e.target.files.length);
+    console.log("drwerewr mee!!", e.target.files[0]);
     if (e.target.files.length > 0) {
       const url = URL.createObjectURL(e.target.files[0]);
       setImgProfile(url);
@@ -31,7 +33,7 @@ export function MainContent() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
     setStore([...store, values]);
     setStoreImg([...storeImg, imgProfile]);
     setValues({
@@ -40,10 +42,6 @@ export function MainContent() {
       address: "",
       phone: "",
     });
-    setImgProfile([]);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Reset the file input
-    }
     console.log(storeImg);
     console.log(store);
   };
@@ -53,21 +51,12 @@ export function MainContent() {
       <h1>Create Profile</h1>
       <div className="form">
         <form className="form-input" onSubmit={handleSubmit}>
-          {imgProfile.length > 0 &&
-            imgProfile.map((img, index) => (
-              <img
-                key={index}
-                className="img-profile"
-                src={img}
-                alt="Profile"
-              />
-            ))}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            ref={fileInputRef} // Attach the ref to the file input
-          />
+          {imgProfile ? (
+            <img className="img-profile" src={imgProfile} />
+          ) : ( 
+            <img hidden />
+          )}
+          <input type="file" accept="image/*" onChange={handleImageChange} />
           <input
             type="text"
             name="fullname"
