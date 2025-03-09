@@ -34,14 +34,24 @@ export function MainContent() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStore([...store, values]);
-    setStoreImg([...storeImg, imgProfile]);
-    setValues({
-      fullname: "",
-      email: "",
-      address: "",
-      phone: "",
-    });
+    if (
+      values.fullname ||
+      values.email ||
+      values.address ||
+      values.phone ||
+      imgProfile
+    ) {
+      setStore([...store, values]);
+      setStoreImg([...storeImg, imgProfile]);
+      setValues({
+        fullname: "",
+        email: "",
+        address: "",
+        phone: "",
+      });
+      setImgProfile(null);
+      e.target.reset();
+    }
     console.log(storeImg);
     console.log(store);
   };
@@ -53,7 +63,7 @@ export function MainContent() {
         <form className="form-input" onSubmit={handleSubmit}>
           {imgProfile ? (
             <img className="img-profile" src={imgProfile} />
-          ) : ( 
+          ) : (
             <img hidden />
           )}
           <input type="file" accept="image/*" onChange={handleImageChange} />
